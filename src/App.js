@@ -1,9 +1,10 @@
 import "./App.css";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
-import Login from "./components/login.js";
-import Menu from "./components/menu.js";
-import Admin from "./components/admin.js";
-import Inicio from "./components/inicio.js";
+import Login from "./components/Login";
+import Register from "./components/Register";
+import Menu from "./components/Menu";
+import Admin from "./components/Admin";
+import Inicio from "./components/Inicio";
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
                 <Menu />
                 <Switch>
                     <Route exact path="/login" component={Login} />
+                    <Route exact path="/register" component={Register} />
                     <Route exact path="/admin" component={Admin} />
                     <Route exact path="/" component={Inicio} />
                 </Switch>

@@ -1,0 +1,8 @@
+button[disabled] {
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+.input-error {
+    border: 1px solid rgb(241, 101, 101) !important;
+}
