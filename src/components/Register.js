@@ -1,8 +1,22 @@
 import React from "react";
-import { Formik } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import { registerService } from "../services/registerService";
+import { useHistory } from "react-router-dom";
+
+const validateFields = (values) => {
+    const errors = {};
+
+    if (!values.email) {
+        errors.email = "Introduce un email";
+    }
+    if (!values.password) {
+        errors.password = "Introduce una contraseña";
+    }
+    return errors;
+};
 
 const Register = () => {
+    const history = useHistory();
     /*
         - valores iniciales
         - qué va a ocurrir cuando haga submit: pasamos funciones
@@ -18,37 +32,32 @@ const Register = () => {
                         email: "",
                         password: "",
                     }}
-                    validate={(values) => {
-                        const errors = {};
-
-                        if (!values.email) {
-                            errors.email = "Introduce un email";
-                        }
-                        if (!values.password) {
-                            errors.password = "Introduce una contraseña";
-                        }
-                        return errors;
-                    }}
+                    validate={validateFields}
                     onSubmit={(values, { setFieldError }) => {
                         console.log(values);
-                        return registerService(values).then((err) => {
-                            console.log(err, err.code, err.message);
+                        return registerService(values).then((res) => {
+                            console.log(res);
+                            if (res.user) {
+                                history.push("/");
+                                return;
+                            }
                             if (
-                                err.code === "auth/invalid-email" ||
+                                res.code === "auth/invalid-email" ||
                                 "auth/email-already-in-use"
                             ) {
-                                setFieldError("email", err.message);
+                                setFieldError("email", res.message);
+                                return;
                             }
-                            if (err.code === "auth/weak-password") {
-                                setFieldError("password", err.message);
+                            if (res.code === "auth/weak-password") {
+                                setFieldError("password", res.message);
+                                return;
                             }
                         });
                     }}
                 >
-                    {({ handleChange, handleSubmit, isSubmitting, errors }) => (
-                        <form onSubmit={handleSubmit} className="form-group">
-                            <input
-                                onChange={handleChange}
+                    {({ isSubmitting, errors }) => (
+                        <Form className="form-group">
+                            <Field
                                 className={
                                     errors.email
                                         ? "form-control input-error"
@@ -58,8 +67,7 @@ const Register = () => {
                                 name="email"
                                 placeholder="Introduce tu nombre"
                             />
-                            <input
-                                onChange={handleChange}
+                            <Field
                                 className={
                                     errors.password
                                         ? "form-control mt-4 input-error"
@@ -76,17 +84,18 @@ const Register = () => {
                             >
                                 Registrarse
                             </button>
-                            {errors.email && (
-                                <div className="alert alert-danger mt-4">
-                                    {errors.email}
-                                </div>
-                            )}
-                            {errors.password && (
-                                <div className="alert alert-danger mt-4">
-                                    {errors.password}
-                                </div>
-                            )}
-                        </form>
+
+                            <ErrorMessage
+                                className="alert alert-danger mt-4"
+                                name="email"
+                                component="div"
+                            />
+                            <ErrorMessage
+                                className="alert alert-danger mt-4"
+                                name="password"
+                                component="div"
+                            />
+                        </Form>
                     )}
                 </Formik>
             </div>

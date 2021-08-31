@@ -58,11 +58,6 @@ const Login = () => {
                             {mnsError}
                         </div>
                     ) : null}
-                    {/* {validar ? (
-                    <div className="alert alert-danger mt-4">{validar}</div>
-                ) : (
-                    <span></span>
-                )} */}
                 </form>
             </div>
             <div className="col"></div>
